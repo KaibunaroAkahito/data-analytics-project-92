@@ -39,20 +39,20 @@ ORDER BY average_income ASC;
 -- Выводит имя продавца, день нели и суммарную выручку продавца в определенный день недели, округленная до целого числа
 -- Сортировка по убыванию выручки
 SELECT CONCAT(employees.first_name, ' ', employees.last_name) AS seller,
-       LOWER(TO_CHAR(sales.sale_date, 'day'))                 AS day_of_week,
+       LOWER(TRIM(TO_CHAR(sales.sale_date, 'day')))           AS day_of_week,
        FLOOR(SUM(products.price * sales.quantity))            AS income
 FROM sales
          JOIN products ON sales.product_id = products.product_id
          JOIN employees ON employees.employee_id = sales.sales_person_id
-GROUP BY seller, day_of_week
-ORDER BY CASE LOWER(TO_CHAR(sales.sale_date, 'day'))
-             WHEN 'sunday' THEN 1
-             WHEN 'monday' THEN 2
-             WHEN 'tuesday' THEN 3
-             WHEN 'wednesday' THEN 4
-             WHEN 'thursday' THEN 5
-             WHEN 'friday' THEN 6
-             WHEN 'saturday' THEN 7
+GROUP BY seller, TRIM(TO_CHAR(sales.sale_date, 'day'))
+ORDER BY CASE TRIM(TO_CHAR(sales.sale_date, 'day'))
+             WHEN 'monday' THEN 1
+             WHEN 'tuesday' THEN 2
+             WHEN 'wednesday' THEN 3
+             WHEN 'thursday' THEN 4
+             WHEN 'friday' THEN 5
+             WHEN 'saturday' THEN 6
+             WHEN 'sunday' THEN 7
              END, -- Сортировка по порядку дня недели
          seller;
 
