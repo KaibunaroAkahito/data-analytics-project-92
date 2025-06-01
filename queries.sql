@@ -71,16 +71,16 @@ ORDER BY selling_month  ASC;
 
 -- Покупатели с первой покупкой по акции
 SELECT DISTINCT ON (customers.customer_id) CONCAT(customers.first_name, ' ', customers.last_name) AS customer,
-                                           first_purchase.first_sale_date,
+                                           first_purchase.sale_date,
                                            CONCAT(employees.first_name, ' ', employees.last_name) AS seller
 FROM customers
          JOIN (SELECT customer_id,
-                      MIN(sale_date) AS first_sale_date
+                      MIN(sale_date) AS sale_date
                FROM sales
                GROUP BY customer_id) first_purchase ON customers.customer_id = first_purchase.customer_id
          JOIN
      sales ON first_purchase.customer_id = sales.customer_id
-         AND first_purchase.first_sale_date = sales.sale_date
+         AND first_purchase.sale_date = sales.sale_date
          JOIN
      products ON sales.product_id = products.product_id
          JOIN
