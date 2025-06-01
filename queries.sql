@@ -4,16 +4,15 @@ SELECT COUNT(customer_id) AS customers_count FROM customers;
 -- Отчет: Топ-10 продавцов по суммарной выручке
 -- Выводит имя продавца, количество сделок и общую выручку
 -- Сортировка по убыванию выручки
-SELECT TRIM(CONCAT(employees.first_name, ' ', COALESCE(employees.middle_initial || ' ', ''),
-                   employees.last_name))           AS seller,
-       COUNT(sales.sales_id)                       AS operations,
-       FLOOR(SUM(products.price * sales.quantity)) AS income
+SELECT TRIM(CONCAT(employees.first_name, ' ', employees.last_name)) AS seller,
+       COUNT(sales.sales_id)                                        AS operations,
+       FLOOR(SUM(products.price * sales.quantity))                  AS income
 FROM sales
          JOIN employees ON sales.sales_person_id = employees.employee_id
          JOIN products ON sales.product_id = products.product_id
 GROUP BY employees.employee_id, employees.first_name, employees.middle_initial, employees.last_name
 ORDER BY income DESC
-LIMIT 10;
+LIMIT 10
 
 
 -- Отчет о продавцах со средней выручкой ниже средней по всем продавцам
