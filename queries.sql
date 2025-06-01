@@ -45,8 +45,17 @@ FROM sales
          JOIN products ON sales.product_id = products.product_id
          JOIN employees ON employees.employee_id = sales.sales_person_id
 GROUP BY seller, day_of_week
-ORDER BY EXTRACT(DOW FROM MIN(sale_date)), -- Сортировка по порядку дня недели
+ORDER BY CASE LOWER(TO_CHAR(sales.sale_date, 'day'))
+             WHEN 'sunday' THEN 1
+             WHEN 'monday' THEN 2
+             WHEN 'tuesday' THEN 3
+             WHEN 'wednesday' THEN 4
+             WHEN 'thursday' THEN 5
+             WHEN 'friday' THEN 6
+             WHEN 'saturday' THEN 7
+             END, -- Сортировка по порядку дня недели
          seller;
+
 
 -- Возрастные группы покупателей
 SELECT CASE
