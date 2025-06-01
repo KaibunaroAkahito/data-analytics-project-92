@@ -60,14 +60,14 @@ GROUP BY age_category
 ORDER BY age_category;
 
 -- Покупатели и выручка по месяцам
-SELECT TO_CHAR(sale_date, 'YYYY-MM')               AS date,
+SELECT TO_CHAR(sale_date, 'YYYY-MM')               AS selling_month ,
        COUNT(DISTINCT customer_id)                 AS total_customers,
        FLOOR(SUM(products.price * sales.quantity)) AS income
 FROM sales
          JOIN products ON sales.product_id = products.product_id
          JOIN employees ON employees.employee_id = sales.sales_person_id
-GROUP BY date
-ORDER BY date ASC;
+GROUP BY selling_month 
+ORDER BY selling_month  ASC;
 
 -- Покупатели с первой покупкой по акции
 SELECT DISTINCT ON (customers.customer_id) CONCAT(customers.first_name, ' ', customers.last_name) AS customer,
