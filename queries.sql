@@ -12,10 +12,7 @@ FROM sales
 INNER JOIN employees ON sales.sales_person_id = employees.employee_id
 INNER JOIN products ON sales.product_id = products.product_id
 GROUP BY
-    employees.employee_id,
-    employees.first_name,
-    employees.middle_initial,
-    employees.last_name
+    seller
 ORDER BY income DESC
 LIMIT 10;
 
@@ -36,7 +33,6 @@ overall_avg AS (
     SELECT FLOOR(AVG(products.price * sales.quantity)) AS avg_income
     FROM sales
     INNER JOIN products ON sales.product_id = products.product_id
-    INNER JOIN employees ON sales.sales_person_id = employees.employee_id
 )
 
 SELECT
