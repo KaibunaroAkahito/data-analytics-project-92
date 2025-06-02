@@ -29,23 +29,20 @@ WITH seller_stats AS (
     FROM sales
     INNER JOIN products ON sales.product_id = products.product_id
     INNER JOIN employees ON sales.sales_person_id = employees.employee_id
-    GROUP BY seller
+    GROUP BY CONCAT(employees.first_name, ' ', employees.last_name)
 ),
-
 overall_avg AS (
     SELECT FLOOR(AVG(products.price * sales.quantity)) AS avg_income
     FROM sales
     INNER JOIN products ON sales.product_id = products.product_id
     INNER JOIN employees ON sales.sales_person_id = employees.employee_id
 )
-
 SELECT
     seller,
     average_income
 FROM seller_stats
 WHERE average_income < (SELECT avg_income FROM overall_avg)
 ORDER BY average_income ASC;
-
 
 -- Отчет: данные по выручке по каждому продавцу и дню недели
 -- Выводит имя продавца, день нели и суммарную выручку продавца 
@@ -85,7 +82,7 @@ ORDER BY age_category;
 -- Покупатели и выручка по месяцам
 SELECT
     TO_CHAR(sale_date, 'YYYY-MM') AS selling_month,
-    COUNT(DISTINCT customer_id) AS total_customers,
+    COUNT(DISTINCT sales.customer_id) AS total_customers,
     FLOOR(SUM(products.price * sales.quantity)) AS income
 FROM sales
 INNER JOIN products ON sales.product_id = products.product_id
@@ -96,8 +93,8 @@ ORDER BY selling_month ASC;
 -- Покупатели с первой покупкой по акции
 WITH first_purchase AS (
     SELECT
-        customer_id,
-        MIN(sale_date) AS sale_date
+        sales.customer_id,
+        MIN(sales.sale_date) AS sale_date
     FROM sales
     GROUP BY customer_id
 )
