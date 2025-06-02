@@ -32,7 +32,8 @@ WITH seller_stats AS (
     GROUP BY CONCAT(employees.first_name, ' ', employees.last_name)
 ),
 overall_avg AS (
-    SELECT FLOOR(AVG(products.price * sales.quantity)) AS avg_income
+    SELECT 
+        FLOOR(AVG(products.price * sales.quantity)) AS avg_income
     FROM sales
     INNER JOIN products ON sales.product_id = products.product_id
     INNER JOIN employees ON sales.sales_person_id = employees.employee_id
@@ -81,7 +82,7 @@ ORDER BY age_category;
 
 -- Покупатели и выручка по месяцам
 SELECT
-    TO_CHAR(sale_date, 'YYYY-MM') AS selling_month,
+    TO_CHAR(sales.sale_date, 'YYYY-MM') AS selling_month,
     COUNT(DISTINCT sales.customer_id) AS total_customers,
     FLOOR(SUM(products.price * sales.quantity)) AS income
 FROM sales
@@ -96,7 +97,7 @@ WITH first_purchase AS (
         sales.customer_id,
         MIN(sales.sale_date) AS sale_date
     FROM sales
-    GROUP BY customer_id
+    GROUP BY sales.customer_id
 )
 
 SELECT DISTINCT ON (customers.customer_id)
