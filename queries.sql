@@ -48,17 +48,12 @@ SELECT
 FROM sales
 INNER JOIN products ON sales.product_id = products.product_id
 INNER JOIN employees ON sales.sales_person_id = employees.employee_id
-GROUP BY seller, TRIM(TO_CHAR(sales.sale_date, 'day'))
-ORDER BY CASE TRIM(TO_CHAR(sales.sale_date, 'day'))
-    WHEN 'monday' THEN 1
-    WHEN 'tuesday' THEN 2
-    WHEN 'wednesday' THEN 3
-    WHEN 'thursday' THEN 4
-    WHEN 'friday' THEN 5
-    WHEN 'saturday' THEN 6
-    WHEN 'sunday' THEN 7
-END, -- Сортировка по порядку дня недели
-seller;
+-- сомнительно...
+GROUP BY
+    seller,
+    TRIM(TO_CHAR(sales.sale_date, 'day')),
+    EXTRACT(ISODOW FROM sales.sale_date)
+ORDER BY EXTRACT(ISODOW FROM sales.sale_date), seller;
 
 -- Возрастные группы покупателей
 SELECT
