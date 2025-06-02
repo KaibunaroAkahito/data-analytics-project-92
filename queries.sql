@@ -23,7 +23,9 @@ WITH seller_stats AS (
     SELECT
         CONCAT(employees.first_name, ' ', employees.last_name) AS seller,
         FLOOR(AVG(products.price * sales.quantity)) AS average_income,
-        FLOOR(AVG(AVG(products.price * sales.quantity)) OVER ()) AS overall_avg_income
+        FLOOR(
+            AVG(AVG(products.price * sales.quantity)) OVER ()
+        ) AS overall_avg_income
     FROM sales
     INNER JOIN products ON sales.product_id = products.product_id
     INNER JOIN employees ON sales.sales_person_id = employees.employee_id
@@ -34,8 +36,8 @@ SELECT
     seller_stats.seller,
     seller_stats.average_income
 FROM seller_stats
-WHERE average_income < overall_avg_income
-ORDER BY average_income ASC;
+WHERE seller_stats.average_income < seller_stats.overall_avg_income
+ORDER BY seller_stats.average_income ASC;
 
 -- Отчет: данные по выручке по каждому продавцу и дню недели
 -- Выводит имя продавца, день нели и суммарную выручку продавца 
@@ -91,4 +93,3 @@ WHERE products.price = 0
 ORDER BY
     customers.customer_id,
     sales.sale_date;
-
