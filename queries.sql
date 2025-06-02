@@ -39,10 +39,10 @@ overall_avg AS (
     INNER JOIN employees ON sales.sales_person_id = employees.employee_id
 )
 SELECT
-    seller,
-    average_income
+    seller_stats.seller,
+    seller_stats.average_income
 FROM seller_stats
-WHERE average_income < (SELECT avg_income FROM overall_avg)
+WHERE seller_stats.average_income < (SELECT overall_avg.avg_income FROM overall_avg)
 ORDER BY average_income ASC;
 
 -- Отчет: данные по выручке по каждому продавцу и дню недели
