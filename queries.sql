@@ -79,29 +79,16 @@ GROUP BY selling_month
 ORDER BY selling_month ASC;
 
 -- Покупатели с первой покупкой по акции
-WITH first_purchase AS (
-    SELECT
-        sales.customer_id,
-        MIN(sales.sale_date) AS sale_date
-    FROM sales
-    GROUP BY sales.customer_id
-)
-
 SELECT DISTINCT ON (customers.customer_id)
-    first_purchase.sale_date,
+    sales.sale_date,
     CONCAT(customers.first_name, ' ', customers.last_name) AS customer,
     CONCAT(employees.first_name, ' ', employees.last_name) AS seller
 FROM customers
-INNER JOIN first_purchase
-    ON customers.customer_id = first_purchase.customer_id
-INNER JOIN
-    sales
-    ON
-        first_purchase.customer_id = sales.customer_id
-        AND first_purchase.sale_date = sales.sale_date
-INNER JOIN
-    products ON sales.product_id = products.product_id
-INNER JOIN
-    employees ON sales.sales_person_id = employees.employee_id
+INNER JOIN sales ON customers.customer_id = sales.customer_id
+INNER JOIN products ON sales.product_id = products.product_id
+INNER JOIN employees ON sales.sales_person_id = employees.employee_id
 WHERE products.price = 0
-ORDER BY customers.customer_id;
+ORDER BY
+    customers.customer_id,
+    sales.sale_date;
+
