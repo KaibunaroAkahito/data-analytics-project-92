@@ -17,7 +17,7 @@ GROUP BY
     employees.middle_initial,
     employees.last_name
 ORDER BY income DESC
-LIMIT 10
+LIMIT 10;
 
 -- Отчет о продавцах со средней выручкой ниже средней по всем продавцам
 -- Выводит имя продавца, среднию выручку продавца за сделку с округлением 
